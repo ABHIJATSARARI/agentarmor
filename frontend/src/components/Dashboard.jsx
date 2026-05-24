@@ -8,6 +8,7 @@ import HoneypotView from './HoneypotView';
 import ImmuneMemory from './ImmuneMemory';
 import SecurityPipeline from './SecurityPipeline';
 import DetectionStats from './DetectionStats';
+import ExpandableCard from './ExpandableCard';
 import { fetchAPI } from '../utils/api';
 import { ATTACK_TYPES } from '../utils/constants';
 
@@ -97,27 +98,47 @@ export default function Dashboard({ metrics, agents, events, honeypot, immuneDat
       {/* Main Grid */}
       <div className="main-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
-          <AgentMonitor
-            agents={agents}
-            selectedAgent={selectedAgent}
-            onSelectAgent={onSelectAgent}
-          />
-          <BehaviorChart agent={selectedAgent} />
+          <ExpandableCard title="🤖 Agent Monitor" tourId="agent-monitor">
+            <AgentMonitor
+              agents={agents}
+              selectedAgent={selectedAgent}
+              onSelectAgent={onSelectAgent}
+            />
+          </ExpandableCard>
+          <ExpandableCard title="📊 Behavioral Fingerprint" tourId="behavior-chart">
+            <div className="card">
+              <div className="card-header">
+                <div className="card-title"><span className="icon">📊</span> Behavioral Fingerprint</div>
+                <span className="card-badge badge-active">CANVAS</span>
+              </div>
+              <BehaviorChart agent={selectedAgent} />
+            </div>
+          </ExpandableCard>
         </div>
 
-        <ThreatFeed events={events} />
+        <ExpandableCard title="📡 Live Threat Feed" tourId="threat-feed">
+          <ThreatFeed events={events} />
+        </ExpandableCard>
 
-        <AttackConsole onScanResult={handleScanResult} />
+        <ExpandableCard title="⚡ Attack Console" tourId="attack-console">
+          <AttackConsole onScanResult={handleScanResult} />
+        </ExpandableCard>
       </div>
 
-      {/* Bottom Grid — now 3 columns */}
+      {/* Bottom Grid — 3 columns */}
       <div className="bottom-grid-3">
-        <HoneypotView data={honeypot} />
-        <ImmuneMemory
-          signatures={immuneData?.signatures}
-          agents={agents}
-        />
-        <DetectionStats events={events} />
+        <ExpandableCard title="🍯 Honeypot Agent" tourId="honeypot">
+          <HoneypotView data={honeypot} />
+        </ExpandableCard>
+        <ExpandableCard title="🧬 Immune Memory" tourId="immune-memory">
+          <ImmuneMemory
+            signatures={immuneData?.signatures}
+            agents={agents}
+          />
+        </ExpandableCard>
+        <ExpandableCard title="📊 Detection Analytics" tourId="detection-stats">
+          <DetectionStats events={events} />
+        </ExpandableCard>
       </div>
     </div>
   );

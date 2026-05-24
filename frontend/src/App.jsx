@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Dashboard from './components/Dashboard';
+import GuidedTour from './components/GuidedTour';
 import { fetchAPI, WebSocketManager } from './utils/api';
 import { POLL_INTERVAL } from './utils/constants';
 
@@ -11,6 +12,7 @@ export default function App() {
   const [immuneData, setImmuneData] = useState(null);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [connected, setConnected] = useState(false);
+  const [showTour, setShowTour] = useState(true);
   const wsRef = useRef(null);
 
   // Fetch initial data and poll for updates
@@ -97,7 +99,14 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <button
+            className="tour-restart-btn"
+            onClick={() => setShowTour(true)}
+            title="Restart guided tour"
+          >
+            <span>🎯</span> Tour
+          </button>
           <div className="header-status">
             <span className="status-dot" />
             SYSTEMS OPERATIONAL
@@ -118,6 +127,11 @@ export default function App() {
         selectedAgent={selectedAgent}
         onSelectAgent={setSelectedAgent}
       />
+
+      {/* Guided Tour */}
+      {showTour && (
+        <GuidedTour onComplete={() => setShowTour(false)} />
+      )}
     </div>
   );
 }
